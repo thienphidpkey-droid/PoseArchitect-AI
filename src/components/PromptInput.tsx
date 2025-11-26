@@ -236,11 +236,15 @@ const ProfileModeTab = memo(({ options, updateBusinessOption, updateBusinessDire
                 {[
                     ['person', 'Người mẫu & Tư thế', UserIcon],
                     ['style', 'Trang phục & Bối cảnh', SwatchIcon]
-                ].map(([id, label, Icon]) => (
-                    <button key={id as string} type="button" onClick={() => setActiveTab(id as 'person' | 'style')} className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap flex-1 justify-center ${activeTab === id ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-500/10 rounded-t-lg' : 'border-transparent text-slate-500 dark:text-slate-400'}`}>
-                        <Icon className="h-4 w-4" />{label}
-                    </button>
-                ))}
+                ].map(([id, label, Icon]) => {
+                    const IconComponent = Icon as React.ComponentType<{ className?: string }>;
+                    return (
+                        <button key={id as string} type="button" onClick={() => setActiveTab(id as 'person' | 'style')} className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap flex-1 justify-center ${activeTab === id ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-500/10 rounded-t-lg' : 'border-transparent text-slate-500 dark:text-slate-400'}`}>
+                            <IconComponent className="h-4 w-4" />
+                            <span>{label as string}</span>
+                        </button>
+                    );
+                })}
             </div>
 
             <div className="px-2 min-h-[200px]">
@@ -307,7 +311,7 @@ const ProfileModeTab = memo(({ options, updateBusinessOption, updateBusinessDire
                             <div className={`${groupClass} h-full`}>
                                 <h4 className={titleClass}>1. Mix & Match (Layering)</h4>
                                 <div className="space-y-2 pl-1">
-                                    {['blazer', 'vest', 'shirt', 'turtleneck'].map(item => (
+                                    {(['blazer', 'vest', 'shirt', 'turtleneck'] as const).map(item => (
                                         <div key={item} className="flex items-center justify-between h-9 border-b border-dashed border-slate-100 dark:border-slate-700/50 last:border-0">
                                             <label className="flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer select-none">
                                                 <input type="checkbox" className="rounded text-indigo-600 bg-slate-100 dark:bg-slate-700 border-slate-300 dark:border-slate-600 focus:ring-indigo-500" checked={b.outfitDetails[item]?.enabled} onChange={(e) => updateBusinessOutfit(item, 'enabled', e.target.checked)} />
@@ -521,9 +525,15 @@ const PromptInput: React.FC<PromptInputProps> = ({ onBrainstorm, isLoading, isDa
                                     ['pose', 'Tư Thế', UserIcon],
                                     ['style', 'Style', PaintBrushIcon],
                                     ['custom', 'Tùy Biến', ChatBubbleBottomCenterTextIcon]
-                                ].map(([id, l, I]) => (
-                                    <button key={id} type="button" onClick={() => setActiveTab(id)} className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all ${activeTab === id ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-500/10 rounded-t-lg' : 'border-transparent text-slate-500 dark:text-slate-400'}`}><I className="h-4 w-4" />{l}</button>
-                                ))}
+                                ].map(([id, l, I]) => {
+                                    const IconComponent = I as React.ComponentType<{ className?: string }>;
+                                    return (
+                                        <button key={id as string} type="button" onClick={() => setActiveTab(id as 'camera' | 'pose' | 'style' | 'custom')} className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all ${activeTab === id ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-500/10 rounded-t-lg' : 'border-transparent text-slate-500 dark:text-slate-400'}`}>
+                                            <IconComponent className="h-4 w-4" />
+                                            <span>{l as string}</span>
+                                        </button>
+                                    );
+                                })}
                             </div>
                             <div className="px-4 pb-4 min-h-[200px] max-h-[50vh] overflow-y-auto">
                                 {activeTab === 'camera' && <CreativeCameraTab options={options} updateOption={updateOption} />}
